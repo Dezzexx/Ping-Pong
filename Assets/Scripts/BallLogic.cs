@@ -1,51 +1,74 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BallLogic : MonoBehaviour
 {
+    [SerializeField] Racket LeftRacket, RightRacket;
+    [SerializeField] Rigidbody2D rb;
     [SerializeField] float speed;
-    [SerializeField] float speedMultiplier;
-    [SerializeField] float maxSpeed;
-
-    private int hit;
-
-    private Rigidbody2D rb;
+    [SerializeField] Text prepareTimerText;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-
-        StartCoroutine(Preparation());
+        StartCoroutine(Prepare(1));
     }
 
-    IEnumerator Preparation()
+    IEnumerator Prepare(int timeInSec)
     {
-        hit = 0;
-        yield return new WaitForSeconds(2);
+        PrepareTimerToText(3);
+        yield return new WaitForSeconds(timeInSec);
+        PrepareTimerToText(2);
+        yield return new WaitForSeconds(timeInSec);
+        PrepareTimerToText(1);
+        yield return new WaitForSeconds(timeInSec);
+        prepareTimerText.gameObject.SetActive(false);
 
-        MoveLogic(RandomDirection());
+        rb.velocity = new Vector2(-1, 1) * speed;
     }
 
-    Vector2 RandomDirection()
+    void PrepareTimerToText(int count)
     {
-        var direction = Random.Range(Random.Range(-1,-0.1f), Random.Range(0.1f,1));
-        return new Vector2(direction, 0);
+        var Text = "Prepare: " + count;
+        prepareTimerText.text = Text.ToString();
     }
 
-    void MoveLogic(Vector2 direction)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        direction = direction.normalized;
+        TagManager tagManager = collision.gameObject.GetComponent<TagManager>();
 
-        var ballSpeed = speed + speedMultiplier * hit;
-        rb.velocity = ballSpeed * direction;
-    }
-
-    void HitCounter()
-    {
-        var speedUp = speedMultiplier * hit;
-        if (speedUp < maxSpeed)
+        if (tagManager == null)
         {
-            hit++;
+            return;
         }
+
+        Tag tag = tagManager.wallTag;
+
+        if (tag.Equals(Tag.leftWall))
+        {
+            RightRacket.GetScore();
+        }
+        if (tag.Equals(Tag.rightWall))
+        {
+            LeftRacket.GetScore();
+        }
+        if (tag.Equals(Tag.leftRacket))
+        {
+            BallBounceDirection(collision, 1);
+        }
+        if (tag.Equals(Tag.rightRacket))
+        {
+            BallBounceDirection(collision, -1);
+        }
+    }
+
+    private void BallBounceDirection(Collision2D collision, int x)
+    {
+        float yBallPosition = transform.position.y;
+        float yRacketPosition = collision.gameObject.transform.position.y;
+        float racketHight = collision.collider.bounds.size.y;
+        float y = (yBallPosition - yRacketPosition) / racketHight;
+        
+        rb.velocity = new Vector2(x, y) * speed;
     }
 }

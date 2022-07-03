@@ -1,22 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.PlayerLoop;
+using System.ComponentModel;
 
 public class MainManager : MonoBehaviour
 {
-    public void StartGame(int sceneIndex) => SceneManager.LoadScene(sceneIndex);
+    public Text BestScoreText;
+    public Text LeftScoreText;
 
-    public void ExitGame()
+    private void Start()
     {
-        #if UNITY_EDITOR
-            {
-                EditorApplication.ExitPlaymode();
-            };
-        #else
-            Application.Quit();
-        #endif
+        BestScoreText.text = $"BestScore({BestScore.Instance.BestScoreName}): {BestScore.Instance.Score.text}";
+    }
+
+    private void Update()
+    {
+        BestScoreText.text = $"BestScore({BestScore.Instance.BestScoreName}): {BestScore.Instance.Score.text}";
     }
 
     public void BackToMenu(int sceneIndex) => SceneManager.LoadScene(sceneIndex);

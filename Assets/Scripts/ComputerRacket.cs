@@ -6,7 +6,7 @@ public class ComputerRacket : Racket
     protected override void Movement()
     {
         float distance = Mathf.Abs(ball.position.y - transform.position.y);
-        if (distance > 2)
+        if (distance > 1)
         {
             if (ball.position.y > transform.position.y)
             {
