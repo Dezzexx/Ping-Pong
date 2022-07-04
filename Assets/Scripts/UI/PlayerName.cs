@@ -3,9 +3,9 @@ using UnityEngine;
 public class PlayerName : MonoBehaviour
 {
     public static PlayerName Instance;
-	 public string PName = "";
+	public string PName = "";
 
-	 private void Awake()
+	private void Awake()
     {
 		if (Instance != null)
     	{

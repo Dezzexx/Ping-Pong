@@ -6,8 +6,9 @@ using UnityEngine.UI;
 public class BestScore : MonoBehaviour
 {
     public static BestScore Instance;
-    public Text Score;
+    public int Score = 0;
     public string BestScoreName = "";
+
     private void Awake()
     {
         if (Instance != null)
@@ -25,7 +26,7 @@ public class BestScore : MonoBehaviour
     [Serializable]
     class SaveData
     {
-        public Text Score;
+        public int Score;
         public string BestScoreName;
     }
 

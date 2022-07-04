@@ -5,9 +5,10 @@ using TMPro;
 
 public class MenuUIHandler : MonoBehaviour
 {
-    public TextMeshProUGUI PName;
+    [SerializeField] TextMeshProUGUI PName;
     public void StartGame(int sceneIndex)
     {
+        Time.timeScale = 1;
         PlayerName.Instance.PName = PName.text;
         SceneManager.LoadScene(sceneIndex);
     }
